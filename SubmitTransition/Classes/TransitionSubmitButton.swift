@@ -48,9 +48,8 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         }
     }
     
-
     open var didEndFinishAnimation : (()->())? = nil
-
+    
     let springGoEase = CAMediaTimingFunction(controlPoints: 0.45, -0.36, 0.44, 0.92)
     let shrinkCurve = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
     let expandCurve = CAMediaTimingFunction(controlPoints: 0.95, 0.02, 1, 0.05)
@@ -60,25 +59,33 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
             self.layer.cornerRadius = normalCornerRadius!
         }
     }
-
+    
     var cachedTitle: String?
-
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setup()
     }
-
+    
     public required init!(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         self.setup()
     }
-
+    
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        self.spiner.calculate(frame: self.bounds)
+    }
+    
     func setup() {
         self.clipsToBounds = true
         spiner.spinnerColor = spinnerColor
     }
-
+    
     open func startLoadingAnimation() {
+        if self.spiner == nil {
+            self.spiner = SpinerLayer(frame: self.frame)
+        }
         self.cachedTitle = title(for: UIControlState())
         self.setTitle("", for: UIControlState())
         UIView.animate(withDuration: 0.1, animations: { () -> Void in
@@ -88,10 +95,10 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
                 _ = Timer.schedule(delay: self.shrinkDuration - 0.25) { _ in
                     self.spiner.animation()
                 }
-        }) 
+        })
         
     }
-
+    
     open func startFinishAnimation(_ delay: TimeInterval, completion:(()->())?) {
         _ = Timer.schedule(delay: delay) { _ in
             self.didEndFinishAnimation = completion
@@ -99,12 +106,12 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
             self.spiner.stopAnimation()
         }
     }
-
+    
     open func animate(_ duration: TimeInterval, completion:(()->())?) {
         startLoadingAnimation()
         startFinishAnimation(duration, completion: completion)
     }
-
+    
     open func setOriginalState() {
         self.returnToOriginalState()
         self.spiner.stopAnimation()
