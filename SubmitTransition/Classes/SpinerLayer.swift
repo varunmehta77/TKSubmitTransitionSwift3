@@ -31,7 +31,7 @@ class SpinerLayer: CAShapeLayer {
             startAngle: CGFloat(startAngle),
             endAngle: CGFloat(endAngle),
             clockwise: clockwise
-            ).cgPath
+        ).cgPath
         
         self.fillColor = nil
         self.strokeColor = spinnerColor.cgColor

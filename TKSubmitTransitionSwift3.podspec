@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   #                  Animated UIButton of Loading Animation and Transition Animation. Inspired by https://dribbble.com/shots/1945593-Login-Home-Screen
   #                  DESC
 
-  s.homepage     = "https://github.com/TareqElMasri/TKSubmitTransitionSwift3"
+  s.homepage     = "https://github.com/codetoart/TKSubmitTransitionSwift3"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -73,7 +73,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/TareqElMasri/TKSubmitTransitionSwift3.git", :tag => "0.6" }
+  s.source       = { :git => "https://github.com/codetoart/TKSubmitTransitionSwift3.git", :tag => "0.6" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

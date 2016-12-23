@@ -49,6 +49,9 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
     }
     
     open var didEndFinishAnimation : (()->())? = nil
+    open var isAnimating = false
+    open var cornerRadius: CGFloat = 0
+    open var width: CGFloat = 0
     
     let springGoEase = CAMediaTimingFunction(controlPoints: 0.45, -0.36, 0.44, 0.92)
     let shrinkCurve = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
@@ -86,6 +89,9 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         if self.spiner == nil {
             self.spiner = SpinerLayer(frame: self.frame)
         }
+        self.width = self.frame.width
+        self.isAnimating = true
+        self.cornerRadius = self.layer.cornerRadius
         self.cachedTitle = title(for: UIControlState())
         self.setTitle("", for: UIControlState())
         UIView.animate(withDuration: 0.1, animations: { () -> Void in
@@ -104,7 +110,17 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
             self.didEndFinishAnimation = completion
             self.expand()
             self.spiner.stopAnimation()
+            self.isAnimating = false
+            self.layer.cornerRadius = self.cornerRadius
         }
+    }
+    
+    open func stopAnimation() {
+        self.setTitle(self.cachedTitle, for: .normal)
+        self.expandButton()
+        self.spiner.stopAnimation()
+        self.isAnimating = false
+        self.layer.cornerRadius = self.cornerRadius
     }
     
     open func animate(_ duration: TimeInterval, completion:(()->())?) {
@@ -128,7 +144,6 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
     }
     
     open func returnToOriginalState() {
-        
         self.layer.removeAllAnimations()
         self.setTitle(self.cachedTitle, for: UIControlState())
         self.spiner.stopAnimation()
@@ -152,6 +167,17 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         expandAnim.timingFunction = expandCurve
         expandAnim.duration = 0.3
         expandAnim.delegate = self
+        expandAnim.fillMode = kCAFillModeForwards
+        expandAnim.isRemovedOnCompletion = false
+        layer.add(expandAnim, forKey: expandAnim.keyPath)
+    }
+    
+    func expandButton() {
+        let expandAnim = CABasicAnimation(keyPath: "bounds.size.width")
+        expandAnim.fromValue = frame.height
+        expandAnim.toValue = self.width
+        expandAnim.duration = shrinkDuration
+        expandAnim.timingFunction = shrinkCurve
         expandAnim.fillMode = kCAFillModeForwards
         expandAnim.isRemovedOnCompletion = false
         layer.add(expandAnim, forKey: expandAnim.keyPath)
