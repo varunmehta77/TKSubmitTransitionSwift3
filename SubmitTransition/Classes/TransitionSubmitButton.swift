@@ -2,13 +2,34 @@ import Foundation
 import UIKit
 
 @IBDesignable
-open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDelegate, CAAnimationDelegate {
+open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDelegate, CAAnimationDelegate, StartStopAnimationDelegate {
+    
+    func canStopAnimation() {
+        canStop = true
+        if (!isAnimating) {
+            stopAnimation()
+        }
+    }
+    
+    func canStartAnimation() {
+        canStop = false
+    }
+    
+    open func stopAnimation() {
+        self.setTitle(self.cachedTitle, for: .normal)
+        self.expandButton()
+        self.spiner.stopAnimation()
+        self.isAnimating = false
+        self.layer.cornerRadius = self.cornerRadius
+    }
     
     lazy var spiner: SpinerLayer! = {
         let s = SpinerLayer(frame: self.frame)
         self.layer.addSublayer(s)
+        s.spinnerDelegate = self
         return s
     }()
+    
     
     @IBInspectable open var spinnerColor: UIColor = UIColor.white {
         didSet {
@@ -57,7 +78,8 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
     let shrinkCurve = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
     let expandCurve = CAMediaTimingFunction(controlPoints: 0.95, 0.02, 1, 0.05)
     let shrinkDuration: CFTimeInterval  = 0.1
-    @IBInspectable open var normalCornerRadius:CGFloat? = 0.0{
+    
+    @IBInspectable open var normalCornerRadius:CGFloat? = 0.0 {
         didSet {
             self.layer.cornerRadius = normalCornerRadius!
         }
@@ -96,11 +118,11 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         self.setTitle("", for: UIControlState())
         UIView.animate(withDuration: 0.1, animations: { () -> Void in
             self.layer.cornerRadius = self.frame.height / 2
-            }, completion: { (done) -> Void in
-                self.shrink()
-                _ = Timer.schedule(delay: self.shrinkDuration - 0.25) { _ in
-                    self.spiner.animation()
-                }
+        }, completion: { (done) -> Void in
+            self.shrink()
+            _ = Timer.schedule(delay: self.shrinkDuration - 0.25) { _ in
+                self.spiner.animation()
+            }
         })
         
     }
@@ -115,13 +137,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         }
     }
     
-    open func stopAnimation() {
-        self.setTitle(self.cachedTitle, for: .normal)
-        self.expandButton()
-        self.spiner.stopAnimation()
-        self.isAnimating = false
-        self.layer.cornerRadius = self.cornerRadius
-    }
+    private var canStop : Bool = false
     
     open func animate(_ duration: TimeInterval, completion:(()->())?) {
         startLoadingAnimation()
