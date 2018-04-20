@@ -44,7 +44,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         }
     }
     
-    var normalBackgroundColor: UIColor? {
+    @IBInspectable var normalBackgroundColor: UIColor? {
         didSet {
             setBgColorForState(color: normalBackgroundColor, forState: .normal)
         }
@@ -79,7 +79,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
     let expandCurve = CAMediaTimingFunction(controlPoints: 0.95, 0.02, 1, 0.05)
     let shrinkDuration: CFTimeInterval  = 0.1
     
-    @IBInspectable open var normalCornerRadius:CGFloat? = 0.0 {
+    open var normalCornerRadius:CGFloat? = 0.0 {
         didSet {
             self.layer.cornerRadius = normalCornerRadius!
         }
