@@ -44,7 +44,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         }
     }
     
-    @IBInspectable var normalBackgroundColor: UIColor? {
+    var normalBackgroundColor: UIColor? {
         didSet {
             setBgColorForState(color: normalBackgroundColor, forState: .normal)
         }
