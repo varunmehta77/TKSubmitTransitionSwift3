@@ -60,7 +60,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         }
     }
     
-    private func setBgColorForState(color: UIColor?, forState: UIControlState){
+    private func setBgColorForState(color: UIColor?, forState: UIControl.State){
         if color != nil {
             setBackgroundImage(UIImage.imageWithColor(color: color!), for: forState)
             
@@ -75,7 +75,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
     open var width: CGFloat = 0
     
     let springGoEase = CAMediaTimingFunction(controlPoints: 0.45, -0.36, 0.44, 0.92)
-    let shrinkCurve = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+    let shrinkCurve = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
     let expandCurve = CAMediaTimingFunction(controlPoints: 0.95, 0.02, 1, 0.05)
     let shrinkDuration: CFTimeInterval  = 0.1
     
@@ -114,8 +114,8 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         self.width = self.frame.width
         self.isAnimating = true
         self.cornerRadius = self.layer.cornerRadius
-        self.cachedTitle = title(for: UIControlState())
-        self.setTitle("", for: UIControlState())
+        self.cachedTitle = title(for: UIControl.State())
+        self.setTitle("", for: UIControl.State())
         UIView.animate(withDuration: 0.1, animations: { () -> Void in
             self.layer.cornerRadius = self.frame.height / 2
         }, completion: { (done) -> Void in
@@ -161,7 +161,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
     
     open func returnToOriginalState() {
         self.layer.removeAllAnimations()
-        self.setTitle(self.cachedTitle, for: UIControlState())
+        self.setTitle(self.cachedTitle, for: UIControl.State())
         self.spiner.stopAnimation()
     }
     
@@ -171,7 +171,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         shrinkAnim.toValue = frame.height
         shrinkAnim.duration = shrinkDuration
         shrinkAnim.timingFunction = shrinkCurve
-        shrinkAnim.fillMode = kCAFillModeForwards
+        shrinkAnim.fillMode = CAMediaTimingFillMode.forwards
         shrinkAnim.isRemovedOnCompletion = false
         layer.add(shrinkAnim, forKey: shrinkAnim.keyPath)
     }
@@ -183,7 +183,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         expandAnim.timingFunction = expandCurve
         expandAnim.duration = 0.3
         expandAnim.delegate = self
-        expandAnim.fillMode = kCAFillModeForwards
+        expandAnim.fillMode = CAMediaTimingFillMode.forwards
         expandAnim.isRemovedOnCompletion = false
         layer.add(expandAnim, forKey: expandAnim.keyPath)
     }
@@ -194,7 +194,7 @@ open class TKTransitionSubmitButton : UIButton, UIViewControllerTransitioningDel
         expandAnim.toValue = self.width
         expandAnim.duration = shrinkDuration
         expandAnim.timingFunction = shrinkCurve
-        expandAnim.fillMode = kCAFillModeForwards
+        expandAnim.fillMode = CAMediaTimingFillMode.forwards
         expandAnim.isRemovedOnCompletion = false
         layer.add(expandAnim, forKey: expandAnim.keyPath)
     }
